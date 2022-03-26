@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Week 3 ePortfolio part 2</title>
+	<style type="text/css">
+		#header{
+			text-align: center;
+		}
+
+		.row{
+			border: 1px solid;
+			width: 550px;
+			margin: auto;
+			padding: 5px;
+		}
+
+		.label{
+			display: inline-block;
+			padding: 10px;
+			text-align: left;
+			width: 350px;
+		}
+
+		.center{
+			text-align: center;
+			padding: 10px 5px;
+		}
+
+		.currency{
+			display: inline-block;
+		}
+
+
+	</style>
+</head>
+<body>
+	
+	<div id="container">
+	<div id="header"><p><h3>Registration for Covid-19 Volunteer - &#174;C19-Team</h3>
+	<form method="" action=""></p></div>
+
+	
+	<div class="row">
+	<div class="label"><label style="text-align: left;" for="fullname">Fullname</label></div>
+	<input type="text" name="fullname" maxlength="30">
+	</div>
+
+	<div class="row">
+	<div class="label"><label style="text-align: left;" for="email">Email</label></div>
+	<input type="text" name="email">
+	</div>
+
+	<div class="row">
+	<div class="label"><label style="text-align: left;" for="dateyoucanstart">Date you can start</label></div>
+	<input type="Date" name="dateyoucanstart">
+	</div>
+
+	<div class="row">
+	<div class="label"><label style="text-align: left;" for="morning">Morning shift preference</label></div>
+	<input type="time" name="morning">
+	</div>
+
+	<div class="row">
+	<div class="label"><label style="text-align: left;" for="evening">Evening shift preference</label></div>
+	<input type="time" name="evening">
+	</div>
+
+	<div class="row">
+	<div class="label"><label style="text-align: left;" for="hoursofwork">How many hours you can work? In multiple of 3</label></div>
+	<input type="number" name="hoursofwork" min="3" max="9">
+	</div>
+
+	<div class="row">
+	<div class="label"><label style="text-align: left;" for="distance">Distance you willing to commute to volunteer center?</label></div>
+	<label for="distance">1<input type="range" name="distance" id="distance" min="1" max="15" value="3">15</label>
+	</div>
+
+	<div class="row">
+	<div class="label"><label style="text-align: left;">You currency perference for payment?</label></div>
+		<input type="radio" name="currency" id="pound">
+		<div class="currency"><label for="pound">&#163;</label></div>
+		<input type="radio" name="currency" id="yen">
+		<div class="currency"><label for="yen">&#165;</label></div>
+		<input type="radio" name="currency" id="euro">
+		<div class="currency"><label for="euro">&#8364;</label></div>
+	</div>	
+
+
+
+	<div class="row center">
+		<textarea rows="6" cols="40" placeholder="Type your home address"></textarea>
+	</div>
+
+
+
+	<div class="row center">
+		<del>You will be given daily meals</del>
+	</div>
+
+
+	<div class="row center">
+		<input type="checkbox" name="terms" checked disabled>I agree to all terms and conditions
+	</div>
+
+
+
+	<div class="row center">Prove you are not a robot: 10 &#60; 20?<input type="checkbox" name="verification"></div>
+
+
+
+	<div class="row center">
+		<input type="submit" name="submission" value="Volunteer now!">
+	</div>
+
+
+
+	<div class="row center">
+		<input type="reset" name="reset" value="Start over">
+	</div>
+
+
+
+	<div class="row center">For more information, visit MOH <a href="https://www.moh.gov.bn/Pages/Home.aspx">website</a></div>
+
+
+
+</form>
+</div>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>wk10-e-c2</title>
+  <style>
+    body{display: grid; width: 80%;margin: 0 auto;grid-template-columns:repeat(5, 2fr) ;grid-auto-rows: 3.5em;}
+
+            /*no additional css is required*/
+
+  </style>
+</head>
+
+
+<!-- do not insert additional id attributes to any element -->
+<!-- do not remove any inline styles -->
+
+<body>
+<h3 style="grid-column: 1/span 5">Online grocery order</h3>
+<p style="grid-column: 1/span 5">Tick the checkboxes to show items</p>
+<div><input type="checkbox" name="items" value="fruits" onclick="getFruits()">fruits</div>
+<div><input type="checkbox" name="items" value="fish" onclick="getFishes()">fish</div>
+<div><input type="checkbox" name="items" value="vegetables" onclick="getVegetables()">vegetables</div>
+<div><input type="checkbox" name="items" value="beef" onclick="getMeats()">beef</div>
+<div></div>
+
+
+<div>Item</div>
+<div>base price per 100gm</div>
+<div>quality</div>
+<div>quantity</div>
+<div>total</div>
+
+<div class="fruits allitems">Durian Musang King</div>
+<div class="fruits allitems">45.67</div>
+<div class="fruits allitems">
+  <input type="radio" name="fruitquality" value="normal" required onclick="getFruits()" onchange="fruitValue()">normal
+  <input type="radio" name="fruitquality" value="premium" required onclick="getFruits()" onchange="fruitValue()">premium
+</div>
+<div class="fruits allitems"><input type="range" class="sliders" name="fruitqty" value="100" min="100" max="1000" id="fruitqty" oninput="fruitValue()"><span id="fruitqtyvalue"></span></div>
+<div class="fruits allitems" oninput="fruitValue()"><!-- (result of base price*quantity) + normal/premium percentage. using id attribute not allowed--></div>
+
+<div class="fishes allitems">Alaskan Bluefin Tuna</div>
+<div class="fishes allitems">67.89</div>
+<div class="fishes allitems">
+  <input type="radio" name="fishquality" value="normal" onclick="getFishes()" onchange="fishValue()">normal
+  <input type="radio" name="fishquality" value="premium" onclick="getFishes()" onchange="fishValue()">premium
+</div>
+<div class="fishes allitems"><input type="range" class="sliders" name="fishqty" value="100" min="100" max="1000" id="fishqty"  oninput="fishValue()"> <span id="fishqtyvalue"></span></div>
+<div class="fishes allitems"><!-- (result of base price*quantity) + normal/premium percentage. using id attribute not allowed--></div>
+
+
+<div class="vegetables allitems">Black truffle</div>
+<div class="vegetables allitems">79.33</div>
+<div class="vegetables allitems">
+  <input type="radio" name="vegetablesquality" value="normal" onclick="getVegetables()" onchange="vegetableValue()">normal
+  <input type="radio" name="vegetablesquality" value="premium" onclick="getVegetables()" onchange="vegetableValue()">premium
+</div>
+<div class="vegetables allitems"><input type="range" class="sliders" name="fruitqty" value="100" min="100" max="1000" id="vegetablesqty" oninput="vegetableValue()"> <span id="vegetablesqtyvalue"></span></div>
+<div class="vegetables allitems"><!-- (result of base price*quantity) + normal/premium percentage. using id attribute not allowed--></div>
+
+
+<div class="meats allitems">wagyu steak</div>
+<div class="meats allitems">97.55</div>
+<div class="meats allitems">
+  <input type="radio" name="meatquality" value="normal" onclick="getMeats()" onchange="meatValue()">normal
+  <input type="radio" name="meatquality" value="premium" onclick="getMeats()" onchange="meatValue()">premium
+</div>
+<div class="meats allitems"><input type="range" class="sliders" name="meatqty" value="100" min="100" max="1000" id="meatqty"  oninput="meatValue()"> <span id="meatqtyvalue"></span></div>
+<div class="meats allitems"><!-- (result of base price*quantity) + normal/premium percentage. using id attribute not allowed--></div>
+
+
+<div style="grid-column: 1/span 4;" class="thirdlastrow allitems">
+  <select name="membership" id="membership" onchange="membershipSelect()">
+    <option value="0">select membership</option>
+    <option value="non-member">non member</option>
+    <option value="member">member</option>
+  </select>
+</div>
+
+<div class="allitems thirdlastrow"><button onclick="totalPurchase()">finalize</button></div>
+<div style="grid-column: 1/span 4;" class="allitems">Total purchases</div><div id="grandtotal" class="allitems thirdlastrow"></div>
+
+
+<div class="memberonly">With your membership, you pay </div><div id="finaltotal"  style="grid-column: 2/span 2"  class="memberonly"></div><div  class="memberonly">You saved </div><div id="saving"  class="memberonly"></div>
+<div class="memberonly">From this purchases, points earned: </div><div id="loyaltypoints"  style="grid-column: 2/span 4"  class="memberonly"></div>
+
+
+<script>
+ //write all the required functions here
+ //indentation is important
+ //also neatness
+
+// repitition is not in the syllabus. but students may use loop since  they learnt this concept in ITP
+//  you are expected to use since covered in the classes:
+// function with parameters
+// getElementsByName
+// getElementsById
+
+// additionally
+// getElementsByClassName
+
+//Items Variables
+var items = document.getElementsByName('items');
+var allItems = document.getElementsByClassName('allitems');
+var thirdLastRow = document.getElementsByClassName('thirdlastrow');
+var memberOnly = document.getElementsByClassName('memberonly');
+var grandTotal = document.getElementById('grandtotal');
+var totalP;
+var membership = document.getElementById('membership');
+
+
+//Fruits Variables
+var fruits = document.getElementsByClassName('fruits');
+var fruitQuality = document.getElementsByName('fruitquality');
+var fruitQuantity = document.getElementById('fruitqty');
+var fruitQuantityValue = document.getElementById('fruitqtyvalue');
+var totalFruits;
+
+//Fishes Variables
+var fishes = document.getElementsByClassName('fishes');
+var fishQuality = document.getElementsByName('fishquality');
+var fishQuantity = document.getElementById('fishqty');
+var fishQuantityValue = document.getElementById('fishqtyvalue');
+var totalFishes;
+
+//Vegetables Variables
+var vegetables = document.getElementsByClassName('vegetables');
+var vegetablesQuality = document.getElementsByName('vegetablesquality');
+var vegetablesQuantity = document.getElementById('vegetablesqty');
+var vegetablesQuantityValue = document.getElementById('vegetablesqtyvalue');
+var totalVegetables;
+
+//Meats Variables
+var meats = document.getElementsByClassName('meats');
+var meatQuality = document.getElementsByName('meatquality');
+var meatQuantity = document.getElementById('meatqty');
+var meatQuantityValue = document.getElementById('meatqtyvalue');
+var totalMeats;
+
+//Sliders
+var sliders = document.getElementsByClassName('sliders');
+
+
+//Hide content
+for (i = 0; i < allItems.length; i++){
+  allItems[i].style.display = "none";
+}
+for (j = 0; j < memberOnly.length; j++){
+  memberOnly[j].style.display = "none";
+}
+
+
+
+//Products Listing
+function getFruits(){ 
+  for (i = 0; i < fruits.length; i++){
+    for (j = 20; j < allItems.length; j++){
+      if (items[0].checked == true) {
+        fruits[i].style.display = "block";
+        allItems[j].style.display = "block";
+
+        if (fruitQuality[0].checked == true || fruitQuality[1].checked == true) {
+          fruitQuantity.disabled = false;
+        } else {
+          fruitQuantity.disabled = true;
+        }
+
+      } else {
+        fruits[i].style.display = "none";
+        allItems[j].style.display = "none";
+      }
+    }
+  }
+}
+
+function getFishes(){
+  for (i = 0; i < fishes.length; i++){
+    for (j = 20; j < allItems.length; j++){
+      if (items[1].checked == true) {
+        fishes[i].style.display = "block";
+        allItems[j].style.display = "block";
+
+        if (fishQuality[0].checked == true || fishQuality[1].checked == true) {
+          fishQuantity.disabled = false;
+        } else {
+          fishQuantity.disabled = true;
+        }
+
+      } else {
+        fishes[i].style.display = "none";
+        allItems[j].style.display = "none";
+      }
+    }
+  }  
+}
+    
+
+function getVegetables(){
+  for (i = 0; i < vegetables.length; i++){
+    for (j = 20; j < allItems.length; j++){
+      if (items[2].checked == true) {
+        vegetables[i].style.display = "block";
+        allItems[j].style.display = "block";
+
+        if (vegetablesQuality[0].checked == true || vegetablesQuality[1].checked == true) {
+          vegetablesQuantity.disabled = false;
+        } else {
+          vegetablesQuantity.disabled = true;
+        }
+
+      } else {
+        vegetables[i].style.display = "none";
+        allItems[j].style.display = "none";
+      }
+    }
+  }    
+}
+    
+
+function getMeats(){
+  for (i = 0; i < meats.length; i++){
+    for (j = 20; j < allItems.length; j++){
+      if (items[3].checked == true) {
+        meats[i].style.display = "block";
+        allItems[j].style.display = "block";
+
+        if (meatQuality[0].checked == true || meatQuality[1].checked == true) {
+          meatQuantity.disabled = false;
+        } else {
+          meatQuantity.disabled = true;
+        }
+
+      } else {
+        meats[i].style.display = "none";
+        allItems[j].style.display = "none";
+      }
+    }  
+  }     
+}
+
+
+
+
+//Fruits
+function fruitValue(){  
+  //sliders value
+  fruitQuantityValue.innerHTML = fruitQuantity.value; 
+
+  //total
+  if (fruitQuality[0].checked == true) {
+    totalFruits = ((((45.67 * 0.025) + 45.67) * (fruitQuantity.value))/100).toFixed(2);
+    fruits[4].innerHTML = totalFruits;
+  } 
+  if (fruitQuality[1].checked == true) {
+    totalFruits = ((((45.67 * 0.043) + 45.67) * (fruitQuantity.value))/100).toFixed(2);
+    fruits[4].innerHTML = totalFruits;
+  }
+}
+
+//Fishes
+function fishValue(){ 
+  //sliders value
+  fishQuantityValue.innerHTML = fishQuantity.value;
+
+  //total
+  if (fishQuality[0].checked == true) {
+    totalFishes = ((((67.89 * 0.025) + 45.67) * (fishQuantity.value))/100).toFixed(2);
+    fishes[4].innerHTML = totalFishes;
+  } 
+  if (fishQuality[1].checked == true) {
+    totalFishes = ((((67.89 * 0.043) + 45.67) * (fishQuantity.value))/100).toFixed(2);
+    fishes[4].innerHTML = totalFishes;
+  }
+}
+
+//Vegetables
+function vegetableValue(){
+  //sliders value
+  vegetablesQuantityValue.innerHTML = vegetablesQuantity.value;
+
+  //total
+  if (vegetablesQuality[0].checked == true) {
+    totalVegetables = ((((79.33 * 0.025) + 45.67) * (vegetablesQuantity.value))/100).toFixed(2);
+    vegetables[4].innerHTML = totalVegetables;
+  } 
+  if (vegetablesQuality[1].checked == true) {
+    totalVegetables = ((((79.33 * 0.043) + 45.67) * (vegetablesQuantity.value))/100).toFixed(2);
+    vegetables[4].innerHTML = totalVegetables;
+  }
+}
+
+//Meats
+function meatValue(){ 
+  //sliders value
+  meatQuantityValue.innerHTML = meatQuantity.value;
+
+  //total
+  if (meatQuality[0].checked == true) {
+    totalMeats = ((((97.55 * 0.025) + 45.67) * (meatQuantity.value))/100).toFixed(2);
+    meats[4].innerHTML = totalMeats;
+  } 
+  if (meatQuality[1].checked == true) {
+    totalMeats = ((((97.55 * 0.043) + 45.67) * (meatQuantity.value))/100).toFixed(2);
+    meats[4].innerHTML = totalMeats;
+  }
+}
+
+
+function totalPurchase(){
+  for (j = 0; j < memberOnly.length; j++){
+    memberOnly[j].style.display = "block";
+  }
+  var a = totalFruits;
+  var b = totalFishes;
+  var c = totalVegetables;
+  var d = totalMeats;
+
+  if (fruitQuality[1].checked == true){
+  totalP = a - (a * 0.05).toFixed(2); 
+  grandTotal.innerHTML = a;
+  finaltotal.innerHTML = totalP;
+  saving.innerHTML = (a * 0.05).toFixed(2);
+  roundL = (totalP/10 - 5).toFixed(0);
+  loyaltypoints.innerHTML =  Math.round(roundL / 10) * 10;
+  }
+ 
+ if (fruitQuality[0].checked == true){
+  totalP = a - (a * 0.05).toFixed(2);
+  grandTotal.innerHTML = totalP;
+  finaltotal.innerHTML = a;
+  saving.innerHTML = (a * 0.05).toFixed(2);
+  roundL = (totalP/10 - 5).toFixed(0);
+  loyaltypoints.innerHTML = Math.round(roundL / 10) * 10;
+  }
+  
+  if (fishQuality[1].checked == true){
+  totalP = b - (b * 0.05).toFixed(2); 
+  grandTotal.innerHTML = b;
+  finaltotal.innerHTML = totalP;
+  saving.innerHTML = (b * 0.05).toFixed(2);
+  roundL = (totalP/10 - 5).toFixed(0);
+  loyaltypoints.innerHTML =  Math.round(roundL / 10) * 10;
+  }
+  
+  if (fishQuality[0].checked == true){
+  totalP = b - (b * 0.05).toFixed(2); 
+  grandTotal.innerHTML = b;
+  finaltotal.innerHTML = totalP;
+  saving.innerHTML = (b * 0.05).toFixed(2);
+  roundL = (totalP/10 - 5).toFixed(0);
+  loyaltypoints.innerHTML =  Math.round(roundL / 10) * 10;
+  }
+  
+  if (vegetablesQuality[1].checked == true){
+  totalP = c - (c * 0.05).toFixed(2); 
+  grandTotal.innerHTML = c;
+  finaltotal.innerHTML = totalP;
+  saving.innerHTML = (c * 0.05).toFixed(2);
+  roundL = (totalP/10 - 5).toFixed(0);
+  loyaltypoints.innerHTML =  Math.round(roundL / 10) * 10;
+  }
+
+if (vegetablesQuality[0].checked == true){
+  totalP = c - (c * 0.05).toFixed(2); 
+  grandTotal.innerHTML = c;
+  finaltotal.innerHTML = totalP;
+  saving.innerHTML = (c * 0.05).toFixed(2);
+  roundL = (totalP/10 - 5).toFixed(0);
+  loyaltypoints.innerHTML =  Math.round(roundL / 10) * 10;
+  }
+
+  if (meatQuality[0].checked == true){
+  totalP = d - (d * 0.05).toFixed(2); 
+  grandTotal.innerHTML = d;
+  finaltotal.innerHTML = totalP;
+  saving.innerHTML = (d * 0.05).toFixed(2);
+  roundL = (totalP/10 - 5).toFixed(0);
+  loyaltypoints.innerHTML =  Math.round(roundL / 10) * 10;
+  }
+
+   if (meatQuality[1].checked == true){
+  totalP = d - (d * 0.05).toFixed(2); 
+  grandTotal.innerHTML = d;
+  finaltotal.innerHTML = totalP;
+  saving.innerHTML = (d * 0.05).toFixed(2);
+  roundL = (totalP/10 - 5).toFixed(0);
+  loyaltypoints.innerHTML =  Math.round(roundL / 10) * 10;
+  }
+
+  if ((fruitQuality[1].checked == true) && (fishQuality[1].checked == true) && (meatQuality[1].checked == true) && (vegetablesQuality[1].checked == true)){
+  totalP = ((d - (d * 0.05)) + (c - (c * 0.05)) +  (b - (b * 0.05)) +  (a - (a * 0.05))).toFixed(2); 
+  grandTotal.innerHTML = d + c + b + a;
+  finaltotal.innerHTML = totalP;
+  saving.innerHTML = (d * 0.05) + (c * 0.05) + (b * 0.05)  (a * 0.05);
+  roundL = (totalP/10 - 5).toFixed(0);
+  loyaltypoints.innerHTML =  Math.round(roundL / 10) * 10;
+  }
+
+   if ((fruitQuality[0].checked == true) && (fishQuality[0].checked == true) && (meatQuality[0].checked == true) && (vegetablesQuality[0].checked == true)){
+  totalP = ((d - (d * 0.05)) + (c - (c * 0.05)) +  (b - (b * 0.05)) +  (a - (a * 0.05))).toFixed(2); 
+  grandTotal.innerHTML = d + c + b + a;
+  finaltotal.innerHTML = totalP;
+  saving.innerHTML = (d * 0.05) + (c * 0.05) + (b * 0.05)  (a * 0.05);
+  roundL = (totalP/10 - 5).toFixed(0);
+  loyaltypoints.innerHTML =  Math.round(roundL / 10) * 10;
+  }
+
+  if ((fruitQuality[0].checked == true) && (fishQuality[0].checked == true) && (meatQuality[0].checked == true) && (vegetablesQuality[0].checked == true)){
+  totalP = ((c - (c * 0.05)) +  (b - (b * 0.05)) +  (a - (a * 0.05))).toFixed(2); 
+  grandTotal.innerHTML = c + b + a;
+  finaltotal.innerHTML = totalP;
+  saving.innerHTML = (c * 0.05) + (b * 0.05)  (a * 0.05);
+  roundL = (totalP/10 - 5).toFixed(0);
+  loyaltypoints.innerHTML =  Math.round(roundL / 10) * 10;
+  }
+
+function membershipSelect(){
+  if (membership[1].selected) {
+    for (j = 0; j < memberOnly.length; j++){
+    memberOnly[j].style.display = "none";
+  }
+  }
+  if (membership[2].selected) {
+    for (j = 0; j < memberOnly.length; j++){
+    memberOnly[j].style.display = "block";
+  }
+}
+}
+}
+</script>
+</body>
+</html>
